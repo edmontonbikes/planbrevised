@@ -1,6 +1,5 @@
 <?php
-require_once('Connections/YBDB.php');
-require_once('Connections/database_functions.php');
+require_once('header.php'); 
 
 // create recordsets
 $query_recordset1 = "SELECT contacts.first_name, contacts.middle_initial, contacts.last_name, contacts.email, contacts.phone, contacts.address1, contacts.address2, contacts.city, contacts.state, contacts.country, contacts.DOB, contacts.zip FROM contacts;";
@@ -105,8 +104,8 @@ if (isset($_POST["MM_insert"])) {
 	
 	//$q .= " limit $s,$limit";
 	echo $contactZip;
-	print_r($fields);
-	print_r($conditions);
+	jslog($fields, 'fields');
+	jslog($conditions, 'conditions');
 	echo "<table>";
 	echo "<tr><td>Name</td><td>Email</td><td>Phone</td><td>Address 1</td><td>Address 2</td><td>City</td><td>State</td><td>Country</td><td>Zip</td><td>DOB</td></tr>";
 	while ($row= mysql_fetch_array($result)) {

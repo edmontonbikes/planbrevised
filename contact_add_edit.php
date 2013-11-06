@@ -1,6 +1,5 @@
-<?php 
-require_once('Connections/YBDB.php'); 
-require_once('Connections/database_functions.php');
+<?php
+require_once('header.php'); 
 
 if($_GET['shop_id']>0){
 	$shop_id = $_GET['shop_id'];
