@@ -1,4 +1,5 @@
 <?php 
+require_once('caliper_helper_functions.php');
 require_once('YBDB.php');
 
 //constants
@@ -48,6 +49,39 @@ function generate_list($querySQL,$list_value,$list_text, $form_name, $default_va
 	if($form_name <> "none"){echo "</select>";}
 }
 
+//This is a general function to generate the contents of a list box based on a MySQL query.  All nessary parameters for the query are passed 
+function generate_list_for_no_id($querySQL,$list_value,$list_text, $form_name, $default_value)
+{
+	global $database_YBDB, $YBDB;
+	mysql_select_db($database_YBDB, $YBDB);
+	$recordset = mysql_query($querySQL, $YBDB) or die(mysql_error());
+	$row_recordset = mysql_fetch_assoc($recordset);
+	$totalRows_recordset = mysql_num_rows($recordset);
+	$default_delimiter = '';
+	
+	// if a form name is supplied HTML listbox code is inserted
+	if($form_name <> "none"){
+		echo "<select name={$form_name} class='yb_standard'>\n";}
+
+	echo "\n";
+	do { 
+		if( $default_value == $row_recordset[$list_value]){ 
+			$default_delimiter = 'selected="selected"';
+		} else { $default_delimiter = '';}
+
+		echo '<option value="' . $row_recordset[$list_text] . '"' . $default_delimiter .'>' . $row_recordset[$list_text] . '</option>\n';
+		} while ($row_recordset = mysql_fetch_assoc($recordset));
+ 	$rows = mysql_num_rows($recordset);
+ 	if($rows > 0) {
+      mysql_data_seek($recordset, 0);
+	  $row_recordset = mysql_fetch_assoc($recordset);
+		}
+	mysql_free_result($recordset);
+	
+	// if a form name is supplied HTML listbox code is inserted
+	if($form_name <> "none"){echo "</select>";}
+}
+
 // Function provides specific MySQL parameters to the function that generates the list box code
 function list_contacts($form_name = "none", $default_value = "", $max_name_length = 20){
 	$querySQL = "SELECT LEFT(CONCAT(last_name, ', ', first_name, ' ',middle_initial),$max_name_length) AS full_name, contact_id, hidden FROM contacts WHERE (first_name <> '' OR last_name <> '') AND hidden <> 1 ORDER BY last_name, first_name, middle_initial";
@@ -67,7 +101,7 @@ function list_states($form_name = "none", $default_value = "", $max_name_length 
 	$querySQL = "SELECT DISTINCT contacts.state FROM contacts WHERE (state <> '') AND hidden <> 1 ORDER BY state";
 	$list_value = "contact_id";
 	$list_text = "state";
-	generate_list($querySQL,$list_value,$list_text,$form_name, $default_value);
+	generate_list_for_no_id($querySQL,$list_value,$list_text,$form_name, $default_value);
 }
 
 function list_zips($form_name = "none", $default_value = "", $max_name_length = 20){

@@ -85,11 +85,12 @@ if (isset($_POST["MM_insert"])) {
     $conditions = array();
 
     // loop through the defined fields
-    foreach($fields as $field){
+    foreach( $_POST as $field_name => $val ){
         // if the field is set and not empty
-        if(isset($_POST[$field]) && $_POST['field'] != '') {
+        if( !empty( $val ) && $field_name != "MM_insert" && $field_name != "search"  ) {
+/*             console_json( $val , 'not empty'); */
             // create a new condition while escaping the value inputed by the user (SQL Injection)
-            $conditions[] = "`$field` LIKE '%" . mysql_real_escape_string($_POST[$field]) . "%'";
+            $conditions[] = "`$field_name` LIKE '%" . mysql_real_escape_string( $val ) . "%'";
         }
     }
 
@@ -104,8 +105,6 @@ if (isset($_POST["MM_insert"])) {
 	
 	//$q .= " limit $s,$limit";
 	echo $contactZip;
-	jslog($fields, 'fields');
-	jslog($conditions, 'conditions');
 	echo "<table>";
 	echo "<tr><td>Name</td><td>Email</td><td>Phone</td><td>Address 1</td><td>Address 2</td><td>City</td><td>State</td><td>Country</td><td>Zip</td><td>DOB</td></tr>";
 	while ($row= mysql_fetch_array($result)) {
