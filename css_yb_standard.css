@@ -1,0 +1,90 @@
+.yb_standard {
+	font-family: Arial, Helvetica, sans-serif;
+	color: #000000;
+	background-color: #FFFFFF;
+	font-size: 18px;
+}
+
+select.yb_standard {height:33px;margin:5px;}
+
+.yb_standarditalics {
+	font-family: Arial, Helvetica, sans-serif;
+	color: #000000;
+	background-color: #FFFFFF;
+	font-size: 16px;
+	font-style: italic;
+}
+.yb_standardCENTER {
+	font-family: Arial, Helvetica, sans-serif;
+	color: #000000;
+	font-size: 16px;
+	letter-spacing: normal;
+	text-align: center;
+}
+.yb_pagetitle {
+	font-family: Arial, Helvetica, sans-serif;
+	color: #000000;
+	background-color: #FFFFFF;
+	font-size: 16px;
+	font-weight: bold;
+	text-decoration: underline;
+}
+.yb_heading1 {
+	font-family: Arial, Helvetica, sans-serif;
+	color: #000000;
+	background-color: #FFFFFF;
+	font-size: 24px;
+	font-weight: bold;
+	font-style: italic;
+}
+.yb_heading2 {
+	font-family: Arial, Helvetica, sans-serif;
+	color: #000000;
+	background-color: #FFFFFF;
+	font-size: 20px;
+	font-weight: bold;
+	font-style: italic;
+}
+.yb_heading3 {
+	font-family: Arial, Helvetica, sans-serif;
+	color: #000000;
+	font-size: 16px;
+	font-weight: bold;
+}
+.yb_heading3red {
+	font-family: Arial, Helvetica, sans-serif;
+	color: #FF0000;
+	background-color: #FFFFFF;
+	font-size: 16px;
+	font-weight: bold;
+}
+.yb_standardCENTERbold {
+	font-family: Arial, Helvetica, sans-serif;
+	color: #000000;
+	font-size: 16px;
+	letter-spacing: normal;
+	text-align: center;
+	font-weight: bold;
+}
+.yb_standardCENTERred {
+
+	font-family: Arial, Helvetica, sans-serif;
+	color: #FF0000;
+	background-color: #FFFFFF;
+	font-size: 16px;
+	letter-spacing: normal;
+	text-align: center;
+}
+.yb_standard_singlereturn {
+	font-family: Arial, Helvetica, sans-serif;
+	color: #000000;
+	background-color: #FFFFFF;
+	font-size: 16px;
+	display: none;
+}
+.yb_standard_small {
+	font-family: Arial, Helvetica, sans-serif;
+	color: #000000;
+	background-color: #FFFFFF;
+	font-size: 14px;
+}

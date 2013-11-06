@@ -1,0 +1,35 @@
+.btn [class^="icon-"] {
+  margin-right: 3px;
+}
+select.yb_standard {
+  font-size: 1em;
+}
+table th {
+  min-width: 80px;
+}
+table td {
+  padding: 4px 8px;
+}
+table .btn-cell {
+  text-align: center;
+}
+table .btn-cell .btn-warning {
+  width: 60px;
+}
+table .visitor-row td {
+  padding: 8px;
+}
+.todays-users {
+  font-weight: bold;
+  font-size: 1.3em;
+  padding: 12px;
+}
+.visit-detail {
+  background: #ebffa4;
+}
+.visit-detail .title {
+  text-align: center;
+  font-weight: bold;
+  font-size: 1.3em;
+  padding: 12px 0px;
+}

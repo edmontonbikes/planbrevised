@@ -1,0 +1,4 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<info>
+	<infoitem key="UD_Recordset2" value="name:shop_visit_id;datatype:int,name:contact_id;datatype:int,name:shop_id;datatype:int,name:shop_user_role;datatype:string,name:project_id;datatype:string,name:time_in;datatype:datetime,name:time_out;datatype:datetime,name:comment;datatype:blob" />
+</info>
