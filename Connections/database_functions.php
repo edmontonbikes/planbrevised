@@ -33,7 +33,7 @@ function generate_list($querySQL,$list_value,$list_text, $form_name, $default_va
 
 	echo "\n";
 	do { 
-		if( $default_value == $row_recordset[$list_value]){ 
+		if( !empty($row_recordset[$list_value]) && $default_value == $row_recordset[$list_value]){ 
 			$default_delimiter = 'selected="selected"';
 		} else { $default_delimiter = '';}
 		echo '<option value="' . $row_recordset[$list_value] . '"' . $default_delimiter .'>' . $row_recordset[$list_text] . '</option>\n';
@@ -64,13 +64,13 @@ function generate_list_for_no_id($querySQL,$list_value,$list_text, $form_name, $
 		echo "<select name={$form_name} class='yb_standard'>\n";}
 
 	echo "\n";
+
 	do { 
-		if( $default_value == $row_recordset[$list_value]){ 
-			$default_delimiter = 'selected="selected"';
-		} else { $default_delimiter = '';}
 
 		echo '<option value="' . $row_recordset[$list_text] . '"' . $default_delimiter .'>' . $row_recordset[$list_text] . '</option>\n';
-		} while ($row_recordset = mysql_fetch_assoc($recordset));
+
+	} while ($row_recordset = mysql_fetch_assoc($recordset));
+
  	$rows = mysql_num_rows($recordset);
  	if($rows > 0) {
       mysql_data_seek($recordset, 0);
@@ -94,7 +94,7 @@ function list_cities($form_name = "none", $default_value = "", $max_name_length 
 	$querySQL = "SELECT DISTINCT contacts.city FROM contacts WHERE (city <> '') AND hidden <> 1 ORDER BY city";
 	$list_value = "contact_id";
 	$list_text = "city";
-	generate_list($querySQL,$list_value,$list_text,$form_name, $default_value);
+	generate_list_for_no_id($querySQL,$list_value,$list_text,$form_name, $default_value);
 }
 
 function list_states($form_name = "none", $default_value = "", $max_name_length = 20){
@@ -108,7 +108,7 @@ function list_zips($form_name = "none", $default_value = "", $max_name_length = 
 	$querySQL = "SELECT DISTINCT contacts.zip FROM contacts WHERE (zip <> '') AND hidden <> 1 ORDER BY zip";
 	$list_value = "contact_id";
 	$list_text = "zip";
-	generate_list($querySQL,$list_value,$list_text,$form_name, $default_value);
+	generate_list_for_no_id($querySQL,$list_value,$list_text,$form_name, $default_value);
 }
 
 function list_CurrentShopUsers($form_name = "none", $default_value = "", $max_name_length = 20){

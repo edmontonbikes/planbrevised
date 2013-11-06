@@ -13,22 +13,22 @@ $query_recordset1 = "SELECT contacts.first_name, contacts.middle_initial, contac
 <table>
 	<tr>
 		<td>Name</td>
-		<td><?php list_contacts_select_user(name)?>
+		<td><?php list_contacts_select_user('contact_id')?>
 		</td>
 	</tr>
 	<tr>
 		<td>City</td>
-		<td><?php list_contacts_select_city(city)?>
+		<td><?php list_contacts_select_city('city')?>
 		</td>
 	</tr>
 	<tr>
 		<td>State</td>
-		<td><?php list_contacts_select_state(state)?>
+		<td><?php list_contacts_select_state('state')?>
 		</td>
 	</tr>
 	<tr>
 		<td>Zip Code</td>
-		<td><?php list_contacts_select_zip(zip)?>
+		<td><?php list_contacts_select_zip('zip')?>
 		</td>
 	</tr>
 	<tr>
@@ -57,7 +57,7 @@ $query_recordset1 = "SELECT contacts.first_name, contacts.middle_initial, contac
 	</tr>
 	<tr>
 		<td>Type of user</td>
-		<td><?php list_contacts_search_role(user_type);?>
+		<td><?php list_contacts_search_role('user_type');?>
 		</td>
 	</tr>
 	<tr>
@@ -90,7 +90,7 @@ if (isset($_POST["MM_insert"])) {
         if( !empty( $val ) && $field_name != "MM_insert" && $field_name != "search"  ) {
 /*             console_json( $val , 'not empty'); */
             // create a new condition while escaping the value inputed by the user (SQL Injection)
-            $conditions[] = "`$field_name` LIKE '%" . mysql_real_escape_string( $val ) . "%'";
+            $conditions[] = "`$field_name` = '" . mysql_real_escape_string( $val ) . "'";
         }
     }
 
@@ -119,7 +119,6 @@ if (isset($_POST["MM_insert"])) {
 		<td>".$row['zip']."</td>
 		<td>".$row['DOB']."</td>
 		</tr>";
-		$count++ ;
 } // end WHILE
 ;}
 ?>
