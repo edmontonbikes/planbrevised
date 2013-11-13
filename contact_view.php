@@ -1,4 +1,4 @@
-<?php
+<?php include ('security/password_protect.php');
 require_once('header.php'); 
 
 // create recordsets
@@ -66,6 +66,8 @@ $query_recordset1 = "SELECT contacts.first_name, contacts.middle_initial, contac
 		</td>
 	</tr>
 	<input type="hidden" name="MM_insert" value="RecordSearch">
+	<tr><td><a href="contact_view.php?logout=1">Logout</a>
+	</td></tr>
 	</form>
 	
 <?php 
