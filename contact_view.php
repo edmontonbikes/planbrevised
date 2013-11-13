@@ -70,24 +70,14 @@ $query_recordset1 = "SELECT contacts.first_name, contacts.middle_initial, contac
 	
 <?php 
 if (isset($_POST["MM_insert"])) {
-	//$contactName = $_POST["name"];
-	//$contactCity = $_POST["city"];
-	//$contactState = $_POST["state"];
-	$contactZip = $_POST["zip"];
-	//$contactMinAge = $_POST["min_age"];
-	//$contactMaxAge = $_POST["max_age"];
-	//$contactUserType = $_POST["user_type"];
-
 	
-	
-    // define the list of fields
-    $fields = array('name', 'city', 'state', 'zip', 'min_age', 'max_age', 'user_type');
+    // create conditions array
     $conditions = array();
 
     // loop through the defined fields
     foreach( $_POST as $field_name => $val ){
         // if the field is set and not empty
-        if( !empty( $val ) && $field_name != "MM_insert" && $field_name != "search"  ) {
+        if( !empty( $val ) && $field_name != "MM_insert" && $field_name != "search"  && $field_name != "user_type"  ) {
 /*             console_json( $val , 'not empty'); */
             // create a new condition while escaping the value inputed by the user (SQL Injection)
             $conditions[] = "`$field_name` = '" . mysql_real_escape_string( $val ) . "'";
@@ -95,20 +85,24 @@ if (isset($_POST["MM_insert"])) {
     }
 
     // builds the query
-    $query = "SELECT (CONCAT(contacts.last_name, ', ', contacts.first_name, ' ', contacts.middle_initial)) AS name, contacts.email, contacts.phone, contacts.address1, contacts.address2, contacts.city, contacts.state, contacts.country, contacts.DOB, contacts.zip FROM contacts";
+    $query = "SELECT DISTINCT (CONCAT(contacts.last_name, ', ', contacts.first_name, ' ', contacts.middle_initial)) AS name, contacts.email, contacts.phone, contacts.address1, contacts.address2, contacts.city, contacts.state, contacts.country, contacts.DOB, contacts.zip FROM contacts JOIN shop_hours ON (contacts.contact_id = shop_hours.contact_id)";
     // if there are conditions defined
     if(count($conditions) > 0) {
         // append the conditions
         $query .= " WHERE " . implode (' AND ', $conditions); // you can change to 'OR', but I suggest to apply the filters cumulative
     }
+	// append user_type condition if necessary
+	if( !empty ($_POST["user_type"])) {
+		$query .= " AND shop_hours.shop_user_role='" . $_POST["user_type"] . "'";
+	}
     $result = mysql_query($query) or die("Couldn't execute query");
 	
-	//$q .= " limit $s,$limit";
-	echo $contactZip;
 	echo "<table>";
-	echo "<tr><td>Name</td><td>Email</td><td>Phone</td><td>Address 1</td><td>Address 2</td><td>City</td><td>State</td><td>Country</td><td>Zip</td><td>DOB</td></tr>";
+	echo "<tr><td>#</td><td>Name</td><td>Email</td><td>Phone</td><td>Address 1</td><td>Address 2</td><td>City</td><td>State</td><td>Country</td><td>Zip</td><td>DOB</td></tr>";
 	while ($row= mysql_fetch_array($result)) {
-	echo "<tr><td>".$row['name']."</td>
+	echo "<tr><td>" . ++$a . //number the list
+		"</td>
+		<td>".$row['name']."</td>
 		<td>".$row['email']."</td>
 		<td>".$row['phone']."</td>
 		<td>".$row['address1']."</td>

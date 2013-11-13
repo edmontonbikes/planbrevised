@@ -1,0 +1,1 @@
+SELECT DISTINCT first_name, middle_initial, last_name, email, phone, address1, address2, city, state, country, zip, DOB FROM contacts join shop_hours on (contacts.contact_id = shop_hours.contact_id) where shop_hours.shop_user_role='Staff / Volunteer'
