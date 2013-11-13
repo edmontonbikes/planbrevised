@@ -87,13 +87,16 @@ if (isset($_POST["MM_insert"])) {
     }
 
     // builds the query
-    $query = "SELECT DISTINCT (CONCAT(contacts.last_name, ', ', contacts.first_name, ' ', contacts.middle_initial)) AS name, contacts.email, contacts.phone, contacts.address1, contacts.address2, contacts.city, contacts.state, contacts.country, contacts.DOB, contacts.zip FROM contacts JOIN shop_hours ON (contacts.contact_id = shop_hours.contact_id)";
+    $query = "SELECT DISTINCT (CONCAT(contacts.last_name, ', ', contacts.first_name, ' ', contacts.middle_initial)) AS name, contacts.email, contacts.phone, contacts.address1, contacts.address2, contacts.city, contacts.state, contacts.country, contacts.DOB, contacts.zip	
+	FROM contacts 
+	LEFT JOIN shop_hours 
+	USING (contact_id)";
     // if there are conditions defined
     if(count($conditions) > 0) {
         // append the conditions
-        $query .= " WHERE " . implode (' AND ', $conditions); // you can change to 'OR', but I suggest to apply the filters cumulative
+        $query .= " WHERE " . implode (' AND ', $conditions); 
     }
-	// append user_type condition if necessary
+	// append user_type condition if defined
 	if( !empty ($_POST["user_type"])) {
 		$query .= " AND shop_hours.shop_user_role='" . $_POST["user_type"] . "'";
 	}
