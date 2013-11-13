@@ -91,15 +91,21 @@ if (isset($_POST["MM_insert"])) {
 	FROM contacts 
 	LEFT JOIN shop_hours 
 	USING (contact_id)";
-    // if there are conditions defined
-    if(count($conditions) > 0) {
+    // if there are conditions defined and user type selected
+    if(count($conditions) > 0 && !empty ($_POST["user_type"])) {
+        // append the conditions
+        $query .= " WHERE " . implode (' AND ', $conditions) . " AND shop_hours.shop_user_role='" . $_POST["user_type"] . "'"; 
+    }
+	// if there are conditions defined and no user type selected
+	if(count($conditions) > 0 && empty ($_POST["user_type"])) {
         // append the conditions
         $query .= " WHERE " . implode (' AND ', $conditions); 
     }
-	// append user_type condition if defined
-	if( !empty ($_POST["user_type"])) {
-		$query .= " AND shop_hours.shop_user_role='" . $_POST["user_type"] . "'";
-	}
+	// if there are no conditions defined and user type selected
+	if(count($conditions) == 0 && !empty ($_POST["user_type"])) {
+        // append the conditions
+        $query .= " WHERE shop_hours.shop_user_role='" . $_POST["user_type"] . "'"; 
+    }
     $result = mysql_query($query) or die("Couldn't execute query");
 	
 	echo "<table>";
