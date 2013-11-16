@@ -1,6 +1,5 @@
 <?php 
-require_once('Connections/YBDB.php');
-require_once('Connections/database_functions.php'); 
+include("header.php");
 
 $page_edit_contact = PAGE_EDIT_CONTACT; 
 $page_individual_history_log = INDIVIDUAL_HISTORY_LOG;

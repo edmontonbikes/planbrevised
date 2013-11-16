@@ -59,7 +59,7 @@ define('USE_USERNAME', true);
 define('LOGOUT_URL', 'shop_welcome.php');
 
 // time out after NN minutes of inactivity. Set to 0 to not timeout
-define('TIMEOUT_MINUTES', 10);
+define('TIMEOUT_MINUTES', 1);
 
 // This parameter is only useful when TIMEOUT_MINUTES is not zero
 // true - timeout time from last activity, false - timeout time from login
@@ -112,7 +112,7 @@ function showLoginPasswordProtect($error_msg) {
     <input type="password" name="access_password" /><p></p><input type="submit" name="Submit" value="Submit" />
   </form>
   <br />
-  <a style="font-size:9px; color: #B0B0B0; font-family: Verdana, Arial;" href="http://www.zubrag.com/scripts/password-protect.php" title="Download Password Protector">Powered by Password Protect</a>
+  <a style="font-size:12px; color: #B0B0B0; font-family: Verdana, Arial;" href="shop_welcome.php" title="Home">Home</a>
   </div>
 </body>
 </html>

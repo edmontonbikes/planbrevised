@@ -1,12 +1,7 @@
-<?php include ('security/password_protect.php');
+<?php 
 require_once('header.php'); 
-
-// create recordsets
-$query_recordset1 = "SELECT contacts.first_name, contacts.middle_initial, contacts.last_name, contacts.email, contacts.phone, contacts.address1, contacts.address2, contacts.city, contacts.state, contacts.country, contacts.DOB, contacts.zip FROM contacts;";
-// define $search
-?>
-
-<?php include("include_header.html");
+include("include_header.html");
+require_once ('security/password_protect.php');
 ?>
 
 <form method="post" name="search" id="contact_search" action="<?php echo $_SERVER['PHP_SELF']; ?>">
@@ -94,17 +89,17 @@ if (isset($_POST["MM_insert"])) {
     // if there are conditions defined and user type selected
     if(count($conditions) > 0 && !empty ($_POST["user_type"])) {
         // append the conditions
-        $query .= " WHERE " . implode (' AND ', $conditions) . " AND shop_hours.shop_user_role='" . $_POST["user_type"] . "'"; 
+        $query .= " WHERE " . implode (' AND ', $conditions) . " AND shop_hours.shop_user_role='" . $_POST["user_type"] . "' ORDER BY contacts.last_name ASC"; 
     }
 	// if there are conditions defined and no user type selected
 	if(count($conditions) > 0 && empty ($_POST["user_type"])) {
         // append the conditions
-        $query .= " WHERE " . implode (' AND ', $conditions); 
+        $query .= " WHERE " . implode (' AND ', $conditions) . " ORDER BY contacts.last_name ASC"; 
     }
 	// if there are no conditions defined and user type selected
 	if(count($conditions) == 0 && !empty ($_POST["user_type"])) {
         // append the conditions
-        $query .= " WHERE shop_hours.shop_user_role='" . $_POST["user_type"] . "'"; 
+        $query .= " WHERE shop_hours.shop_user_role='" . $_POST["user_type"] . "' ORDER BY contacts.last_name ASC"; 
     }
     $result = mysql_query($query) or die("Couldn't execute query");
 	
