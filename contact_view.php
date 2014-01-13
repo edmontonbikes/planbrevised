@@ -1,7 +1,9 @@
 <?php 
+require_once ('security/password_protect.php');
 require_once('header.php'); 
 include("include_header.html");
-require_once ('security/password_protect.php');
+
+$page_individual_history_log = INDIVIDUAL_HISTORY_LOG;
 ?>
 
 <form method="post" name="search" id="contact_search" action="<?php echo $_SERVER['PHP_SELF']; ?>">
@@ -28,79 +30,94 @@ require_once ('security/password_protect.php');
 	</tr>
 	<tr>
 		<td>Min Age</td>
-		<td><input type="integer" name="min_age" id="min_age">
-				<!-- populate  list -->
-				<?php
-         //date in mm/dd/yyyy format; or it can be in other formats as well
-         //$birthDate = "12/17/1983";
-         //explode the date to get month, day and year
-         //$birthDate = explode("/", $birthDate);
-         //get age from date or birthdate
-         //$age = (date("md", date("U", mktime(0, 0, 0, $birthDate[0], $birthDate[1], $birthDate[2]))) > date("md") ? ((date("Y")-$birthDate[2])-1):(date("Y")-$birthDate[2]));
-         //echo "Age is:".$age;
-    
-				// while 
-				?>
+		<td><input type="integer" name="min_age" id="min_age" value="">
 			</input>
 		</td>
 	</tr>
 	<tr>
 		<td>Max Age</td>
-		<td><input type="integer" name="max_age" id="max_age">
+		<td><input type="integer" name="max_age" id="max_age" value="">
 			</input>
 		</td>
 	</tr>
 	<tr>
 		<td>Type of user</td>
-		<td><?php list_contacts_search_role('user_type');?>
+		<td><?php list_contacts_search_role('shop_user_role');?>
 		</td>
 	</tr>
 	<tr>
 		<td></td>
-		<td><input type="submit" value ="search" name="search"></input>
-		</td>
-	</tr>
-	<input type="hidden" name="MM_insert" value="RecordSearch">
-	<tr><td><a href="contact_view.php?logout=1">Logout</a>
+		<td><input type="submit" class="btn btn-primary" value ="Search" name="search"></input>
+		<input type="hidden" name="MM_insert" value="RecordSearch">
+		<a href="contact_view.php?logout=1" class="btn btn-disabled btn-small">Logout</a>
 	</td></tr>
 	</form>
 	
 <?php 
 if (isset($_POST["MM_insert"])) {
-	
-    // create conditions array
-    $conditions = array();
 
+ // create conditions array
+    $conditions = array();
+ console_json( $_POST , 'post');
     // loop through the defined fields
     foreach( $_POST as $field_name => $val ){
         // if the field is set and not empty
-        if( !empty( $val ) && $field_name != "MM_insert" && $field_name != "search"  && $field_name != "user_type"  ) {
+        if( !empty( $val ) && $field_name != "MM_insert" && $field_name != "search"  && $field_name != "min_age"  && $field_name != "max_age"  && $val !="no_selection"  ) {
 /*             console_json( $val , 'not empty'); */
             // create a new condition while escaping the value inputed by the user (SQL Injection)
             $conditions[] = "`$field_name` = '" . mysql_real_escape_string( $val ) . "'";
-        }
-    }
+        };
+    };
+	
+	//if only one age restriction is input, set the other to a default value
+	if( !empty( $_POST["min_age"]) or !empty( $_POST["max_age"])) {
+		if( !empty( $_POST["min_age"])) {
+			$min_age = $_POST["min_age"];
+		} else {
+			$min_age = "0";
+		};
+		if( !empty( $_POST["max_age"])) {
+			$max_age = $_POST["max_age"];
+		} else {
+			$max_age = "199";
+		};
+	};
+	console_json( $min_age , 'min_age');
+	console_json( $max_age , 'max_age');
+
+	//if age restrictions are set, create condition
+	if( isset( $min_age)) {
+		$max_age = ++$max_age; // max age correction
+		$dob_condition = "DOB 
+            BETWEEN DATE_ADD(CURDATE(), INTERVAL -" . $max_age . " YEAR) 
+                AND DATE_ADD(CURDATE(), INTERVAL -" . $min_age . " YEAR)";
+	};
+	//if both condtional variables are set, append AND to dob_condition
+	if( isset( $dob_condition) AND count($conditions) > 0 ) {
+        $dob_condition .= " AND "; 
+    };
 
     // builds the query
-    $query = "SELECT DISTINCT (CONCAT(contacts.last_name, ', ', contacts.first_name, ' ', contacts.middle_initial)) AS name, contacts.email, contacts.phone, contacts.address1, contacts.address2, contacts.city, contacts.state, contacts.country, contacts.DOB, contacts.zip	
+    $query = "SELECT DISTINCT (CONCAT(contacts.last_name, ', ', contacts.first_name, ' ', contacts.middle_initial)) AS name, contacts.email, contacts.phone, contacts.address1, contacts.address2, contacts.city, contacts.state, contacts.country, contacts.DOB, contacts.zip, contacts.contact_id
 	FROM contacts 
 	LEFT JOIN shop_hours 
 	USING (contact_id)";
-    // if there are conditions defined and user type selected
-    if(count($conditions) > 0 && !empty ($_POST["user_type"])) {
-        // append the conditions
-        $query .= " WHERE " . implode (' AND ', $conditions) . " AND shop_hours.shop_user_role='" . $_POST["user_type"] . "' ORDER BY contacts.last_name ASC"; 
+	
+	//if conditions or dob_condition defined, append WHERE clause
+		if( isset( $dob_condition) OR count($conditions) > 0 ) {
+        $query .= " WHERE "; 
     }
-	// if there are conditions defined and no user type selected
-	if(count($conditions) > 0 && empty ($_POST["user_type"])) {
+
+	// append dob condition if defined
+	if( isset( $dob_condition)) {
+		$query .= $dob_condition;
+	}
+    // append conditions if defined
+    if( count( $conditions) > 0 ) {
         // append the conditions
-        $query .= " WHERE " . implode (' AND ', $conditions) . " ORDER BY contacts.last_name ASC"; 
+        $query .= implode (' AND ', $conditions) . " ORDER BY contacts.last_name ASC"; 
     }
-	// if there are no conditions defined and user type selected
-	if(count($conditions) == 0 && !empty ($_POST["user_type"])) {
-        // append the conditions
-        $query .= " WHERE shop_hours.shop_user_role='" . $_POST["user_type"] . "' ORDER BY contacts.last_name ASC"; 
-    }
+ console_json( $query , 'query');
     $result = mysql_query($query) or die("Couldn't execute query");
 	
 	echo "<table>";
@@ -108,7 +125,9 @@ if (isset($_POST["MM_insert"])) {
 	while ($row= mysql_fetch_array($result)) {
 	echo "<tr><td>" . ++$a . //number the list
 		"</td>
-		<td>".$row['name']."</td>
+		<td>
+		<a href=" .  $page_individual_history_log . "?contact_id=" . $row['contact_id'] . ">" //create contact_id link
+		.$row['name']."</a></td>
 		<td>".$row['email']."</td>
 		<td>".$row['phone']."</td>
 		<td>".$row['address1']."</td>
